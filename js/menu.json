@@ -57,12 +57,12 @@
 			"type": "wmslayer",
 			"peso": 33,
 			"nombre": "Catastro",
-			"short_abstract": "Catastro",
+			"short_abstract": "Objetos territoriales legales y catastrales",
 			"class": "",
 			"seccion": "catastro",
 			"servicio": "wms",
 			"version": "1.3.0",
-			"host": "https://localhost:8888/proxy/proxy.php?http://geo.arba.gov.ar/geoserver/idera/wms",
+			"host": "http://localhost:8888/proxy/proxy.php?http://geo.arba.gov.ar/geoserver/idera/wms",
 			"feature_info_format": "application/json"
 		},
 		{
