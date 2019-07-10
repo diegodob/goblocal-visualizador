@@ -369,8 +369,8 @@ $("body").on("pluginLoad", function(event, plugin){
 
 			//Construye el mapa
 			mapa = L.map('mapa', {
-			    center: [-40, -59],
-			    zoom: 4,
+			    center: [-34.595997, -58.579080],
+			    zoom: 12,
 			    layers: [argenmap],
 				zoomControl: false,
 				minZoom: 3,
