@@ -44,13 +44,15 @@ gestorMenu.addPlugin("leaflet","https://cdnjs.cloudflare.com/ajax/libs/leaflet/1
 	gestorMenu.addPlugin("Draw","https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js")
 	// <!-- Leaflet SimpleGraticule -->
 	gestorMenu.addPlugin("graticula","templates/ign-geoportal-basic/js/leaflet-simplegraticule/L.SimpleGraticule.js");
+	// <!-- Leaflet Control Geocoder -->
+	gestorMenu.addPlugin("geocoder","https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js");
 });
 
 // Add plugins to map when (and if) avaiable
 // Mapa base actual de ArgenMap (Geoserver)
 var unordered = '';
-var ordered = ['','','','','','','','',''];
-var ordenZoomHome = 1; var ordenLocate = 2; var ordenFullScreen = 3; var ordenGraticula = 4; var ordenMeasure = 5; var ordenDraw = 6; var ordenBetterScale = 7; var ordenMinimap = 8;
+var ordered = ['','','','','','','','','',''];
+var ordenGeocoder = 1; var ordenZoomHome = 2; var ordenLocate = 3; var ordenFullScreen = 4; var ordenGraticula = 5; var ordenMeasure = 6; var ordenDraw = 7; var ordenBetterScale = 8; var ordenMinimap = 9;
 var visiblesActivar = true;
 $("body").on("pluginLoad", function(event, plugin){
 	unordered = '';
@@ -84,6 +86,8 @@ $("body").on("pluginLoad", function(event, plugin){
 		case 'FullScreen':
 			ordered.splice(ordenFullScreen, 1, plugin.pluginName);
 			break;
+		case 'geocoder':
+			ordered.splice(ordenGeocoder, 1, plugin.pluginName);
 		default :
 			// Add unordered plugins
 			unordered = plugin.pluginName;
@@ -125,6 +129,10 @@ $("body").on("pluginLoad", function(event, plugin){
 	}
 	if(visiblesActivar && gestorMenu.pluginExists('minimap')) {
 		if(gestorMenu.plugins['minimap'].getStatus() == 'ready' || gestorMenu.plugins['minimap'].getStatus() == 'fail'){
+		} else { visiblesActivar = false; }
+	}
+	if(visiblesActivar && gestorMenu.pluginExists('geocoder')) {
+		if(gestorMenu.plugins['geocoder'].getStatus() == 'ready' || gestorMenu.plugins['geocoder'].getStatus() == 'fail'){
 		} else { visiblesActivar = false; }
 	}
 	if(visiblesActivar){
@@ -354,6 +362,38 @@ $("body").on("pluginLoad", function(event, plugin){
 					});
 					gestorMenu.plugins['Draw'].setStatus('visible');
 					break;
+								case 'FullScreen':
+					// Leaflet-Control.FullScreen plugin https://github.com/brunob/leaflet.fullscreen
+					L.control.fullscreen({
+					  position: 'topleft', // change the position of the button can be topleft, topright, bottomright or bottomleft, defaut topleft
+					  title: 'Ver en pantalla completa', // change the title of the button, default Full Screen
+					  titleCancel: 'Salir de pantalla completa', // change the title of the button when fullscreen is on, default Exit Full Screen
+					  content: null, // change the content of the button, can be HTML, default null
+					  forceSeparateButton: true, // force seperate button to detach from zoom buttons, default false
+					  forcePseudoFullscreen: false, // force use of pseudo full screen even if full screen API is available, default false
+					  fullscreenElement: false // Dom element to render in full screen, false by default, fallback to map._container
+					}).addTo(mapa);	
+
+					mapa.on('enterFullscreen', function(){
+					  if (miniMap._minimized) {
+					    miniMap._restore();
+					    window.setTimeout( miniMap_Minimize, 2000 );
+					  }
+					});
+
+					mapa.on('exitFullscreen', function(){
+					  if (miniMap._minimized) {
+						miniMap._restore();
+						window.setTimeout( miniMap_Minimize, 2000 );
+					  }
+					});
+					gestorMenu.plugins['FullScreen'].setStatus('visible');
+					break;
+				case 'geocoder':
+					// Leaflet Geocoder plguin https://github.com/perliedman/leaflet-control-geocoder
+					L.Control.geocoder().addTo(mapa);
+					gestorMenu.plugins['geocoder'].setStatus('visible');
+					break;					
 				default:
 					break;
 			}
