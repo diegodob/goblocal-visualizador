@@ -391,8 +391,20 @@ $("body").on("pluginLoad", function(event, plugin){
 					break;
 				case 'geocoder':
 					// Leaflet Geocoder plguin https://github.com/perliedman/leaflet-control-geocoder
-					L.Control.geocoder().addTo(mapa);
+					var nominatimOptions = 
+						{geocodingQueryParams: 
+							{viewbox:"-58.6433,-34.5447, -58.5222,-34.6549", 
+							bounded: "1"}}
+					var unGeocoder = new L.Control.Geocoder.Nominatim(nominatimOptions);
+					var options = {}
+					options.placeholder = "Buscar ...";
+					options.geocoder = unGeocoder;
+					L.Control.geocoder(options).addTo(mapa);
+					
+					
+
 					gestorMenu.plugins['geocoder'].setStatus('visible');
+					
 					break;					
 				default:
 					break;
